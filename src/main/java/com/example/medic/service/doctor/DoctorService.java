@@ -1,23 +1,24 @@
-package com.example.medic.service;
+package com.example.medic.service.doctor;
 
 import com.example.medic.entity.doctor.Doctor;
+import com.example.medic.entity.doctor.WorkingTime;
 import com.example.medic.entity.superEntity.Parent;
 import com.example.medic.exceptions.ResourceNotFound;
-import com.example.medic.payload.DoctorPayload;
+import com.example.medic.payload.doctor.DoctorPayload;
 import com.example.medic.payload.Result;
-import com.example.medic.repository.DoctorRepository;
+import com.example.medic.payload.doctor.WorkingTimePayload;
+import com.example.medic.repository.doctor.DoctorRepository;
 import com.example.medic.repository.ParentRepository;
 import com.example.medic.repository.RoleRepository;
+import com.example.medic.service.MyFileService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +28,7 @@ public class DoctorService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final MyFileService myFileService;
+    private final WorkingTimeService workingTimeService;
     private final Logger logger= LoggerFactory.getLogger(DoctorService.class);
     Result result=new Result();
 
@@ -49,6 +51,12 @@ public class DoctorService {
             doctor.setPassportSeries(doctorPayload.getPassportSeries());
             doctor.setAbout(doctorPayload.getAbout());
 
+            List<WorkingTimePayload> workingTimePayloads = doctorPayload.getWorkingTimePayloadList();
+
+            List<WorkingTime> workingTimes = workingTimePayloads.stream()
+                    .map(workingTimeService::save).collect(Collectors.toList());
+
+            doctor.setWorkingTime(workingTimes);
             doctorRepository.save(doctor);
 
             return result.save(doctor);
@@ -99,9 +107,14 @@ public class DoctorService {
         return result.error();
     }
 
-    public Page<Doctor> getAll(int page, int size){
-        Pageable pageable= PageRequest.of(page, size);
-        return doctorRepository.findAll(pageable);
+    public List<Doctor> getAll(){
+        return doctorRepository.findAll();
+    }
+
+    public List<Doctor> getAllByRate(){
+        List<Doctor>doctorList=doctorRepository.getDoctorsByRate();
+
+        return doctorList;
     }
 
     public Doctor findDoctor(UUID doctorId){

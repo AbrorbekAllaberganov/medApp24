@@ -1,9 +1,10 @@
-package com.example.medic.payload;
+package com.example.medic.payload.doctor;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -14,4 +15,5 @@ public class DoctorRatePayload {
     private UUID doctorId;
     private Double rate;
     private String comment;
+
 }

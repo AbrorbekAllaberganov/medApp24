@@ -1,20 +1,16 @@
-package com.example.medic.service;
+package com.example.medic.service.doctor;
 
+import com.example.medic.entity.doctor.Doctor;
 import com.example.medic.entity.doctor.DoctorRate;
 import com.example.medic.exceptions.ResourceNotFound;
-import com.example.medic.payload.DoctorPayload;
-import com.example.medic.payload.DoctorRatePayload;
+import com.example.medic.payload.doctor.DoctorRatePayload;
 import com.example.medic.payload.Result;
-import com.example.medic.repository.DoctorRateRepository;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.example.medic.repository.doctor.DoctorRateRepository;
+import com.example.medic.repository.doctor.DoctorRepository;
+import com.example.medic.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,20 +22,26 @@ import java.util.UUID;
 public class DoctorRateService {
     private final DoctorRateRepository doctorRateRepository;
     private final DoctorService doctorService;
+    private final DoctorRepository doctorRepository;
     private final UserService userService;
+    private final WorkingTimeService workingTimeService;
     private final Logger logger = LoggerFactory.getLogger(DoctorRateService.class);
     Result result = new Result();
 
     public Result saveRate(DoctorRatePayload doctorRatePayload) {
         try {
             DoctorRate doctorRate = new DoctorRate();
+            Doctor doctor=doctorService.findDoctor(doctorRatePayload.getDoctorId());
 
-            doctorRate.setDoctor(doctorService.findDoctor(doctorRatePayload.getDoctorId()));
+            doctorRate.setDoctor(doctor);
             doctorRate.setUser(userService.findUser(doctorRatePayload.getUserId()));
             doctorRate.setComment(doctorRatePayload.getComment());
             doctorRate.setRate(doctorRatePayload.getRate());
 
             doctorRateRepository.save(doctorRate);
+
+            doctor.setRate(doctorRateRepository.getRateDoctor(doctor.getId()));
+            doctorRepository.save(doctor);
 
             return result.save(doctorRate);
         } catch (Exception e) {

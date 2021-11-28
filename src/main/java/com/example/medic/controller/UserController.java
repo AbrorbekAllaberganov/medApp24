@@ -3,6 +3,7 @@ package com.example.medic.controller;
 import com.example.medic.payload.Result;
 import com.example.medic.payload.UserPayload;
 import com.example.medic.service.UserService;
+import com.example.medic.service.doctor.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @RestController
 public class UserController {
     private final UserService userService;
+    private final DoctorService doctorService;
 
     @PutMapping("/edit/{id}")
     public ResponseEntity<Result> editUser(@PathVariable UUID id, @RequestBody UserPayload userPayload){
@@ -26,5 +28,16 @@ public class UserController {
         Result result= userService.deleteUser(id);
         return ResponseEntity.status(result.isSuccess()?200:409).body(result);
     }
+
+    @GetMapping("/get-doctors")
+    public ResponseEntity<?> getAllDoctors(){
+        return ResponseEntity.ok(doctorService.getAll());
+    }
+
+    @GetMapping("/get-rate-doctors")
+    public ResponseEntity<?> getAllDoctorsByRate(){
+        return ResponseEntity.ok(doctorService.getAllByRate());
+    }
+
 
 }

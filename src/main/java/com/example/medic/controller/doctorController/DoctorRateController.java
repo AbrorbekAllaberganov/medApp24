@@ -1,8 +1,8 @@
 package com.example.medic.controller.doctorController;
 
-import com.example.medic.payload.DoctorRatePayload;
+import com.example.medic.payload.doctor.DoctorRatePayload;
 import com.example.medic.payload.Result;
-import com.example.medic.service.DoctorRateService;
+import com.example.medic.service.doctor.DoctorRateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

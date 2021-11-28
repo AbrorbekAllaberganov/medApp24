@@ -33,8 +33,8 @@ public class Result {
         return new Result("error", false);
     }
 
-    public Result success() {
-        return new Result("success", true);
+    public Result success(Object data) {
+        return new Result("success", true,data);
     }
 
 

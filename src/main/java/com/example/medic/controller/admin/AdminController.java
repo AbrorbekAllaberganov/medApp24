@@ -1,8 +1,8 @@
 package com.example.medic.controller.admin;
 
-import com.example.medic.payload.DoctorPayload;
+import com.example.medic.payload.doctor.DoctorPayload;
 import com.example.medic.payload.Result;
-import com.example.medic.service.DoctorService;
+import com.example.medic.service.doctor.DoctorService;
 import com.example.medic.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +27,5 @@ public class AdminController {
         return ResponseEntity.status(result.isSuccess()?200:409).body(result);
     }
 
-    @GetMapping("/get-doctors")
-    public ResponseEntity<?> getDoctors(@RequestParam("page")int page,
-                                        @RequestParam("size")int size){
-        return ResponseEntity.ok(doctorService.getAll(page, size));
-    }
 
 }

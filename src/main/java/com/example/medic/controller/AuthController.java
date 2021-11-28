@@ -1,7 +1,7 @@
 package com.example.medic.controller;
 
 import com.example.medic.entity.superEntity.Parent;
-import com.example.medic.payload.DoctorPayload;
+import com.example.medic.payload.doctor.DoctorPayload;
 import com.example.medic.payload.LoginPayload;
 import com.example.medic.payload.Result;
 import com.example.medic.payload.UserPayload;
@@ -9,7 +9,7 @@ import com.example.medic.repository.AdminRepository;
 import com.example.medic.repository.ParentRepository;
 import com.example.medic.security.JwtTokenProvider;
 
-import com.example.medic.service.DoctorService;
+import com.example.medic.service.doctor.DoctorService;
 import com.example.medic.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
