@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,4 +19,5 @@ public class PharmacyPayload {
     String about;
     List<WorkingTimePayload>workingTimePayloadList;
     String imageHashId;
+//    List<UUID>medicineIds;
 }

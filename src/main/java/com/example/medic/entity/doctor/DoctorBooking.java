@@ -1,7 +1,6 @@
 package com.example.medic.entity.doctor;
 
-import com.example.medic.entity.MyFile;
-import com.example.medic.entity.superEntity.Parent;
+import com.example.medic.entity.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,41 +11,28 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Date;
 import java.util.UUID;
 
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Doctor implements Serializable {
+public class DoctorBooking implements Serializable {
     @Id
     @Type(type = "org.hibernate.type.PostgresUUIDType")
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     protected UUID id;
 
-    @OneToOne
-    Parent parent;
+    @ManyToOne
+    Doctor doctor;
 
     @OneToOne
-    MyFile image;
+    User user;
 
-    @OneToOne
-    MyFile certificate;
+    Date startTime;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    List<WorkingTime> workingTime;
-
-    Double rate;   
-
-    boolean isActive=false;
-
-    String PassportSeries;
-    String PassportNumber;
-
-    String about;
-
-    Double duringTime;
+    Date endTIme;
 }

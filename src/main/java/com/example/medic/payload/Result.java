@@ -11,10 +11,17 @@ public class Result {
     private String message;
     private boolean success;
     private Object data;
+    private String exception;
 
     public Result(String message, boolean success) {
         this.message = message;
         this.success = success;
+    }
+
+    public Result(String message, boolean success, Object data) {
+        this.message = message;
+        this.success = success;
+        this.data = data;
     }
 
     public Result save(Object data) {
@@ -29,8 +36,8 @@ public class Result {
         return new Result("edit success", true, data);
     }
 
-    public Result error() {
-        return new Result("error", false);
+    public Result error(Exception e) {
+        return new Result("error", false,e.getMessage());
     }
 
     public Result success(Object data) {

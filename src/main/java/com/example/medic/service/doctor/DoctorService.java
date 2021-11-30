@@ -46,10 +46,11 @@ public class DoctorService {
 
             doctor.setParent(parent);
             doctor.setImage(myFileService.findByHashId(doctorPayload.getImageId()));
-            doctor.setCertifkat(myFileService.findByHashId(doctorPayload.getCertificateId()));
+            doctor.setCertificate(myFileService.findByHashId(doctorPayload.getCertificateId()));
             doctor.setPassportNumber(doctorPayload.getPassportNumber());
             doctor.setPassportSeries(doctorPayload.getPassportSeries());
             doctor.setAbout(doctorPayload.getAbout());
+            doctor.setDuringTime(doctorPayload.getDuringTime());
 
             List<WorkingTimePayload> workingTimePayloads = doctorPayload.getWorkingTimePayloadList();
 
@@ -62,8 +63,8 @@ public class DoctorService {
             return result.save(doctor);
         }catch (Exception e){
             logger.error(e.getMessage());
+            return result.error(e);
         }
-        return result.error();
     }
 
     public Result editDoctor(UUID doctorId,DoctorPayload doctorPayload){
@@ -79,17 +80,18 @@ public class DoctorService {
 
             doctor.setParent(parent);
             doctor.setImage(myFileService.findByHashId(doctorPayload.getImageId()));
-            doctor.setCertifkat(myFileService.findByHashId(doctorPayload.getCertificateId()));
+            doctor.setCertificate(myFileService.findByHashId(doctorPayload.getCertificateId()));
             doctor.setPassportNumber(doctorPayload.getPassportNumber());
             doctor.setPassportSeries(doctorPayload.getPassportSeries());
+            doctor.setDuringTime(doctorPayload.getDuringTime());
 
             doctorRepository.save(doctor);
 
             return result.save(doctor);
         }catch (Exception e){
             logger.error(e.getMessage());
+            return result.error(e);
         }
-        return result.error();
     }
 
     public Result deleteDoctor(UUID doctorId){
@@ -103,18 +105,17 @@ public class DoctorService {
             return result.delete();
         }catch (Exception e){
             logger.error(e.getMessage());
+            return result.error(e);
         }
-        return result.error();
     }
 
-    public List<Doctor> getAll(){
-        return doctorRepository.findAll();
+    public Result getAll(){
+        return result.success(doctorRepository.findAll());
     }
 
-    public List<Doctor> getAllByRate(){
+    public Result getAllByRate(){
         List<Doctor>doctorList=doctorRepository.getDoctorsByRate();
-
-        return doctorList;
+        return result.success(doctorList);
     }
 
     public Doctor findDoctor(UUID doctorId){

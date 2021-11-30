@@ -41,11 +41,10 @@ public class SuperAdminService {
 
             adminRepository.save(admin);
             return result.save(admin);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
+            return result.error(e);
         }
-
-        return result.error();
     }
 
 

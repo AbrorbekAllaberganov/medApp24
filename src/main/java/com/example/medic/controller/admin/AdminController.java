@@ -16,9 +16,10 @@ public class AdminController {
     private final DoctorService doctorService;
 
     @GetMapping("/get-users")
-    public ResponseEntity<?> getUsers(@RequestParam("page")int page,
+    public ResponseEntity<Result> getUsers(@RequestParam("page")int page,
                                       @RequestParam("size")int size){
-        return ResponseEntity.ok(userService.getAll(page, size));
+        Result result=userService.getAll(page, size);
+        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
     }
 
     @PostMapping("/doctor-save")

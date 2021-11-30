@@ -34,18 +34,21 @@ public class PharmacyController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<?> getAllPharmacy(){
-        return ResponseEntity.ok(pharmacyService.getAllPharmacy());
+    public ResponseEntity<Result> getAllPharmacy(){
+        Result result=pharmacyService.getAllPharmacy();
+        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
     }
 
     @GetMapping("/get-by-rate")
-    public ResponseEntity<?> getAllPharmacyRate(){
-        return ResponseEntity.ok(pharmacyService.getByRate());
+    public ResponseEntity<Result> getAllPharmacySortedByRate(){
+        Result result=pharmacyService.getByRate();
+        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
     }
 
     @GetMapping("/get-rate/{id}")
-    public ResponseEntity<Double> getPharmacyRate(@PathVariable UUID id){
-        return ResponseEntity.ok(pharmacyService.getPharmacyRate(id));
+    public ResponseEntity<Result> getPharmacyRate(@PathVariable UUID id){
+        Result result=pharmacyService.getPharmacyRate(id);
+        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
     }
 
     @GetMapping("/search/{name}")
@@ -54,5 +57,16 @@ public class PharmacyController {
         return ResponseEntity.status(result.isSuccess()?200:409).body(result);
     }
 
+    @GetMapping("/add-medicine")
+    public ResponseEntity<Result> addMedicineInPharmacy(@RequestParam("medicineId")UUID medicineId,
+                                                        @RequestParam("pharmacyId")UUID pharmacyId){
+        Result result= pharmacyService.addMedicine(pharmacyId,medicineId);
+        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
+    }
+    @GetMapping("/get-medicine/{id}")
+    public ResponseEntity<Result> getMedicineByPharmacyId(@PathVariable UUID id){
+        Result result=pharmacyService.getMedicine(id);
+        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
+    }
 
 }

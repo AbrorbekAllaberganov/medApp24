@@ -35,12 +35,14 @@ public class DoctorRateController {
     }
 
     @GetMapping("/get/{doctorId}")
-    public ResponseEntity<?> getRateByDoctorId(@PathVariable UUID doctorId){
-        return ResponseEntity.ok(doctorRateService.getRateDoctorId(doctorId));
+    public ResponseEntity<Result> getDoctorsByRate(@PathVariable UUID doctorId){
+        Result result=doctorRateService.getRateDoctorId(doctorId);
+        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
     }
 
     @GetMapping("/range/{id}")
-    public ResponseEntity<?> getDoctorRate(@PathVariable UUID id){
-        return ResponseEntity.ok(doctorRateService.getDoctorRate(id));
+    public ResponseEntity<Result> getDoctorRate(@PathVariable UUID id){
+        Result result=doctorRateService.getDoctorRate(id);
+        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
     }
 }

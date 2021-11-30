@@ -35,8 +35,9 @@ public class PharmacyRateController {
     }
 
     @GetMapping("/get/{pharmacyId}")
-    public ResponseEntity<?> getAllByPharmacyId(@PathVariable UUID pharmacyId){
-        return ResponseEntity.ok(pharmacyRateService.getRateByPharmacyId(pharmacyId));
+    public ResponseEntity<Result> getAllByPharmacyId(@PathVariable UUID pharmacyId){
+        Result result=pharmacyRateService.getRateByPharmacyId(pharmacyId);
+        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
     }
 
 

@@ -2,7 +2,9 @@ package com.example.medic.controller;
 
 import com.example.medic.payload.Result;
 import com.example.medic.payload.UserPayload;
+import com.example.medic.payload.doctor.DoctorBookingPayload;
 import com.example.medic.service.UserService;
+import com.example.medic.service.doctor.DoctorBookingService;
 import com.example.medic.service.doctor.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.UUID;
 public class UserController {
     private final UserService userService;
     private final DoctorService doctorService;
+    private final DoctorBookingService doctorBookingService;
 
     @PutMapping("/edit/{id}")
     public ResponseEntity<Result> editUser(@PathVariable UUID id, @RequestBody UserPayload userPayload){
@@ -30,14 +33,20 @@ public class UserController {
     }
 
     @GetMapping("/get-doctors")
-    public ResponseEntity<?> getAllDoctors(){
-        return ResponseEntity.ok(doctorService.getAll());
+    public ResponseEntity<Result> getAllDoctors(){
+        Result result=doctorService.getAll();
+        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
     }
 
     @GetMapping("/get-rate-doctors")
-    public ResponseEntity<?> getAllDoctorsByRate(){
-        return ResponseEntity.ok(doctorService.getAllByRate());
+    public ResponseEntity<Result> getAllDoctorsByRate(){
+        Result result=doctorService.getAllByRate();
+        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
     }
 
-
+    @PostMapping("/booking-doctor")
+    public ResponseEntity<Result> bookingDoctor(@RequestBody DoctorBookingPayload doctorBookingPayload){
+        Result result= doctorBookingService.save(doctorBookingPayload);
+        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
+    }
 }

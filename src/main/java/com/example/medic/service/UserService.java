@@ -44,10 +44,10 @@ public class UserService {
             user.setParent(parent);
             userRepository.save(user);
             return result.save(user);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
+            return result.error(e);
         }
-        return result.error();
     }
 
     public Result editUser(UUID userId,UserPayload userPayload){
@@ -64,28 +64,28 @@ public class UserService {
             user.setParent(parent);
             userRepository.save(user);
             return result.edit(user);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
+            return result.error(e);
         }
-        return result.error();
     }
 
     public Result deleteUser(UUID userId){
         try {
             User user =findUser(userId);
-//            Parent parent=user.getParent()
-//            parentRepository.delete(parent);
+            Parent parent=user.getParent();
             userRepository.delete(user);
+            parentRepository.delete(parent);
             return result.delete();
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
+            return result.error(e);
         }
-        return result.error();
     }
 
-    public Page<User> getAll(int page, int size){
+    public Result getAll(int page, int size){
         Pageable pageable= PageRequest.of(page, size);
-        return userRepository.findAll(pageable);
+        return result.success(userRepository.findAll(pageable));
     }
 
     public User findUser(UUID userId){

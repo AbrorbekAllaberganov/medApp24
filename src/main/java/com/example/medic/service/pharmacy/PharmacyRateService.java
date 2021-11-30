@@ -46,7 +46,7 @@ public class PharmacyRateService {
 
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return result.error();
+            return result.error(e);
         }
     }
 
@@ -68,7 +68,7 @@ public class PharmacyRateService {
 
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return result.error();
+            return result.error(e);
         }
     }
 
@@ -80,12 +80,17 @@ public class PharmacyRateService {
             return result.delete();
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return result.error();
+            return result.error(e);
         }
     }
 
-    public List<PharmacyRate> getRateByPharmacyId(UUID pharmacyId){
-        return pharmacyRateRepository.findAllByPharmacy_Id(pharmacyId);
+    public Result getRateByPharmacyId(UUID pharmacyId){
+        try {
+        return result.success(pharmacyRateRepository.findAllByPharmacy_Id(pharmacyId));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return result.error(e);
+        }
     }
 
     public PharmacyRate findPharmacy(UUID pharmacyId) {

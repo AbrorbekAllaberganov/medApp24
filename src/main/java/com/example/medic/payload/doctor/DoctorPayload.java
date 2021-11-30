@@ -23,4 +23,5 @@ public class DoctorPayload {
     String certificateId;
     String about;
     List<WorkingTimePayload> workingTimePayloadList;
+    Double duringTime;
 }

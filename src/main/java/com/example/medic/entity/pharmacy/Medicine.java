@@ -1,7 +1,5 @@
-package com.example.medic.entity.doctor;
+package com.example.medic.entity.pharmacy;
 
-import com.example.medic.entity.MyFile;
-import com.example.medic.entity.superEntity.Parent;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,33 +18,15 @@ import java.util.UUID;
 @Data
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Doctor implements Serializable {
+public class Medicine implements Serializable {
     @Id
     @Type(type = "org.hibernate.type.PostgresUUIDType")
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     protected UUID id;
 
-    @OneToOne
-    Parent parent;
+    String name;
 
-    @OneToOne
-    MyFile image;
-
-    @OneToOne
-    MyFile certificate;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    List<WorkingTime> workingTime;
-
-    Double rate;   
-
-    boolean isActive=false;
-
-    String PassportSeries;
-    String PassportNumber;
-
-    String about;
-
-    Double duringTime;
+    @ManyToMany(fetch = FetchType.EAGER)
+    List<Pharmacy> pharmacy;
 }

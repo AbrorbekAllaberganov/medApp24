@@ -13,8 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -31,7 +29,7 @@ public class DoctorRateService {
     public Result saveRate(DoctorRatePayload doctorRatePayload) {
         try {
             DoctorRate doctorRate = new DoctorRate();
-            Doctor doctor=doctorService.findDoctor(doctorRatePayload.getDoctorId());
+            Doctor doctor = doctorService.findDoctor(doctorRatePayload.getDoctorId());
 
             doctorRate.setDoctor(doctor);
             doctorRate.setUser(userService.findUser(doctorRatePayload.getUserId()));
@@ -46,9 +44,9 @@ public class DoctorRateService {
             return result.save(doctorRate);
         } catch (Exception e) {
             logger.error(e.getMessage());
+            return result.error(e);
         }
 
-        return result.error();
     }
 
     public Result editRate(UUID userId, UUID doctorId, DoctorRatePayload doctorRatePayload) {
@@ -65,37 +63,41 @@ public class DoctorRateService {
             return result.edit(doctorRate);
         } catch (Exception e) {
             logger.error(e.getMessage());
+            return result.error(e);
         }
 
-        return result.error();
     }
 
-    public Result delete(UUID id){
+    public Result delete(UUID id) {
         try {
-            DoctorRate doctorRate=findDoctorRate(id);
+            DoctorRate doctorRate = findDoctorRate(id);
             doctorRateRepository.delete(doctorRate);
             return result.delete();
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
+            return result.error(e);
         }
-        return result.error();
     }
 
-    public List<DoctorRate> getRateDoctorId(UUID doctorId){
+    public Result getRateDoctorId(UUID doctorId) {
         try {
-            return doctorRateRepository.findAllByDoctor_Id(doctorId);
+            return result.success(doctorRateRepository.findAllByDoctor_Id(doctorId));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return result.error(e);
+        }
+    }
+
+    public DoctorRate findDoctorRate(UUID doctorRateId) {
+        return doctorRateRepository.findById(doctorRateId).orElseThrow(() -> new ResourceNotFound("id", "doctor-rate", doctorRateId));
+    }
+
+    public Result getDoctorRate(UUID doctorId) {
+        try {
+            return result.success(doctorRateRepository.getRateDoctor(doctorId));
         }catch (Exception e){
             logger.error(e.getMessage());
+            return result.error(e);
         }
-        return new ArrayList<>();
     }
-
-    public DoctorRate findDoctorRate(UUID doctorRateId){
-        return doctorRateRepository.findById(doctorRateId).orElseThrow(()->new ResourceNotFound("id","doctor-rate",doctorRateId));
-    }
-
-    public Double getDoctorRate(UUID doctorId){
-        return doctorRateRepository.getRateDoctor(doctorId);
-    }
-
 }

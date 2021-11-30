@@ -2,6 +2,7 @@ package com.example.medic.entity.pharmacy;
 
 import com.example.medic.entity.MyFile;
 import com.example.medic.entity.doctor.WorkingTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,8 +36,12 @@ public class Pharmacy {
     Double rate;
 
     @OneToMany(fetch = FetchType.EAGER)
-    List<WorkingTime>pharmacyWorkings;
+    List<WorkingTime> pharmacyWorkings;
 
     @OneToOne
     MyFile image;
+
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JsonIgnore
+//    List<Medicine> medicines;
 }

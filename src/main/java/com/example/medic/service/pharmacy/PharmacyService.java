@@ -1,11 +1,13 @@
 package com.example.medic.service.pharmacy;
 
 import com.example.medic.entity.doctor.WorkingTime;
+import com.example.medic.entity.pharmacy.Medicine;
 import com.example.medic.entity.pharmacy.Pharmacy;
 import com.example.medic.exceptions.ResourceNotFound;
 import com.example.medic.payload.doctor.WorkingTimePayload;
 import com.example.medic.payload.pharmacy.PharmacyPayload;
 import com.example.medic.payload.Result;
+import com.example.medic.repository.pharmacy.MedicineRepository;
 import com.example.medic.repository.pharmacy.PharmacyRateRepository;
 import com.example.medic.repository.pharmacy.PharmacyRepository;
 import com.example.medic.service.MyFileService;
@@ -15,8 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,12 +27,14 @@ public class PharmacyService {
     private final MyFileService myFileService;
     private final PharmacyRateRepository pharmacyRateRepository;
     private final WorkingTimeService workingTimeService;
-    private final Logger logger= LoggerFactory.getLogger(PharmacyService.class);
-    Result result=new Result();
+    private final MedicineRepository medicineRepository;
+    private final MedicineService medicineService;
+    private final Logger logger = LoggerFactory.getLogger(PharmacyService.class);
+    Result result = new Result();
 
-    public Result savePharmacy(PharmacyPayload pharmacyPayload){
-        try{
-            Pharmacy pharmacy=new Pharmacy();
+    public Result savePharmacy(PharmacyPayload pharmacyPayload) {
+        try {
+            Pharmacy pharmacy = new Pharmacy();
 
             pharmacy.setName(pharmacyPayload.getName());
             pharmacy.setAbout(pharmacyPayload.getAbout());
@@ -40,25 +43,26 @@ public class PharmacyService {
             pharmacy.setLat(pharmacyPayload.getLat());
             pharmacy.setImage(myFileService.findByHashId(pharmacyPayload.getImageHashId()));
 
-            List<WorkingTimePayload>workingTimePayloads=pharmacyPayload.getWorkingTimePayloadList();
-            List<WorkingTime>workingTimeList=workingTimePayloads.stream()
+            List<WorkingTimePayload> workingTimePayloads = pharmacyPayload.getWorkingTimePayloadList();
+            List<WorkingTime> workingTimeList = workingTimePayloads.stream()
                     .map(workingTimeService::save).collect(Collectors.toList());
+
+//            pharmacy.setMedicines(medicineRepository.findAllById(pharmacyPayload.getMedicineIds()));
 
             pharmacy.setPharmacyWorkings(workingTimeList);
 
             pharmacyRepository.save(pharmacy);
 
             return result.save(pharmacy);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
+            return result.error(e);
         }
-
-        return result.error();
     }
 
-    public Result editPharmacy(UUID pharmacyId,PharmacyPayload pharmacyPayload){
-        try{
-            Pharmacy pharmacy=findPharmacyById(pharmacyId);
+    public Result editPharmacy(UUID pharmacyId, PharmacyPayload pharmacyPayload) {
+        try {
+            Pharmacy pharmacy = findPharmacyById(pharmacyId);
 
             pharmacy.setName(pharmacyPayload.getName());
             pharmacy.setAbout(pharmacyPayload.getAbout());
@@ -69,50 +73,78 @@ public class PharmacyService {
 
             pharmacyRepository.save(pharmacy);
             return result.save(pharmacy);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
+            return result.error(e);
         }
-
-        return result.error();
     }
 
-    public Result deletePharmacy(UUID pharmacyId){
+    public Result deletePharmacy(UUID pharmacyId) {
         try {
-            Pharmacy pharmacy=findPharmacyById(pharmacyId);
+            Pharmacy pharmacy = findPharmacyById(pharmacyId);
             pharmacyRepository.delete(pharmacy);
             return result.delete();
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
+            return result.error(e);
         }
-        return result.error();
     }
 
-    public List<Pharmacy> getAllPharmacy(){
-        return pharmacyRepository.findAll();
+    public Result getAllPharmacy() {
+        return result.success(pharmacyRepository.findAll());
     }
 
-    public Double getPharmacyRate(UUID pharmacyId){
-        return pharmacyRateRepository.getRatePharmacy(pharmacyId);
-    }
-
-    public List<Pharmacy> getByRate(){
-        return pharmacyRepository.getPharmacyByRate();
-    }
-
-    public Pharmacy findPharmacyById(UUID pharmacyId){
-        return pharmacyRepository.findById(pharmacyId).orElseThrow(()->new ResourceNotFound("pharmacy","id",pharmacyId));
-    }
-
-    public Result searchByName(String name){
+    public Result getPharmacyRate(UUID pharmacyId) {
         try {
-            Pharmacy pharmacy=pharmacyRepository.findByName(name);
-            return result.success(pharmacy);
-        }catch (Exception e){
+            return result.success(pharmacyRateRepository.getRatePharmacy(pharmacyId));
+        } catch (Exception e) {
             logger.error(e.getMessage());
+            return result.error(e);
         }
-
-        return result.error();
     }
 
+    public Result getByRate() {
+        return result.success(pharmacyRepository.getPharmacyByRate());
+    }
+
+    public Pharmacy findPharmacyById(UUID pharmacyId) {
+        return pharmacyRepository.findById(pharmacyId).orElseThrow(() -> new ResourceNotFound("pharmacy", "id", pharmacyId));
+    }
+
+    public Result searchByName(String name) {
+        try {
+            Pharmacy pharmacy = pharmacyRepository.findByName(name);
+            return result.success(pharmacy);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return result.error(e);
+        }
+    }
+
+    public Result addMedicine(UUID pharmacyId,UUID medicineId){
+        try{
+            Pharmacy pharmacy=findPharmacyById(pharmacyId);
+            Medicine medicine=medicineService.findMedicine(medicineId);
+            Set<Pharmacy>pharmacySet=new HashSet<>(medicine.getPharmacy());
+            pharmacySet.add(pharmacy);
+            medicine.setPharmacy(new ArrayList<>(pharmacySet));
+
+            medicineRepository.save(medicine);
+            return result.success(medicine);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return result.error(e);
+        }
+    }
+
+    public Result getMedicine(UUID pharmacyId){
+        try {
+            List<Medicine>medicineList= medicineRepository.getMedicineByPharmacyId(pharmacyId);
+            return result.success(medicineList);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return result.error(e);
+        }
+    }
 
 }

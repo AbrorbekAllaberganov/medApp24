@@ -4,6 +4,8 @@ import com.example.medic.entity.MyFile;
 import com.example.medic.payload.Result;
 import com.example.medic.repository.MyFileRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +22,8 @@ import java.util.UUID;
 public class MyFileService {
 
     private final MyFileRepository repository;
-    Result result=new Result();
+    private final Logger logger = LoggerFactory.getLogger(MyFileService.class);
+    Result result = new Result();
 
     @Value("${upload}")
     private String downloadPath;
@@ -61,10 +64,10 @@ public class MyFileService {
             data.put("hashId", myFile.getHashId());
             return result.save(data);
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return result.error(e);
         }
-        return result.error();
     }
 
 
@@ -79,14 +82,19 @@ public class MyFileService {
 
 
     public Result delete(String hashId) {
-        MyFile myFile = findByHashId(hashId);
+        try {
+            MyFile myFile = findByHashId(hashId);
 
-        File file = new File(String.format("%s/%s.%s", myFile.getUploadPath(), myFile.getHashId(), myFile.getExtension()));
+            File file = new File(String.format("%s/%s.%s", myFile.getUploadPath(), myFile.getHashId(), myFile.getExtension()));
 
-        if (file.delete() && repository.deleteByHashId(hashId)) {
-            return result.delete();
+            if (file.delete() && repository.deleteByHashId(hashId)) {
+                return result.delete();
+            }
+            return new Result("Nimadir xato",false);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return result.error(e);
         }
-        return result.error();
     }
 
 }
