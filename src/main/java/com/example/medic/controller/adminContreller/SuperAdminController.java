@@ -1,4 +1,4 @@
-package com.example.medic.controller.admin;
+package com.example.medic.controller.adminContreller;
 
 import com.example.medic.payload.AdminRequest;
 import com.example.medic.payload.Result;
@@ -6,9 +6,6 @@ import com.example.medic.service.SuperAdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.xml.ws.Response;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/super-admin")

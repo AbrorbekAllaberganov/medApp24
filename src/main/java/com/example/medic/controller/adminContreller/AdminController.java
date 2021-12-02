@@ -1,4 +1,4 @@
-package com.example.medic.controller.admin;
+package com.example.medic.controller.adminContreller;
 
 import com.example.medic.payload.doctor.DoctorPayload;
 import com.example.medic.payload.Result;

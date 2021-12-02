@@ -147,4 +147,14 @@ public class PharmacyService {
         }
     }
 
+    public Result getPharmacyByMedicineId(UUID medicineId){
+        try {
+            List<Pharmacy>pharmacyList= pharmacyRepository.getAllPharmacyByMedicineId(medicineId);
+            return result.success(pharmacyList);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return result.error(e);
+        }
+    }
+
 }

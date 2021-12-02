@@ -4,6 +4,7 @@ import com.example.medic.entity.User;
 import com.example.medic.entity.doctor.Doctor;
 import com.example.medic.entity.doctor.DoctorBooking;
 import com.example.medic.entity.doctor.WorkingTime;
+import com.example.medic.exceptions.ResourceNotFound;
 import com.example.medic.payload.Result;
 import com.example.medic.payload.doctor.DoctorBookingPayload;
 import com.example.medic.payload.doctor.DoctorPayload;
@@ -56,6 +57,25 @@ public class DoctorBookingService {
             logger.error(e.getMessage());
             return result.error(e);
         }
+    }
+
+    public Result delete(UUID bookingId){
+        try {
+            DoctorBooking doctorBooking=findBooking(bookingId);
+            doctorBookingRepository.delete(doctorBooking);
+            return result.delete();
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return result.error(e);
+        }
+    }
+
+    public Result getAll(){
+        return result.success(doctorBookingRepository.findAll());
+    }
+
+    public DoctorBooking findBooking(UUID bookingId){
+        return doctorBookingRepository.findById(bookingId).orElseThrow(()->new ResourceNotFound("doctorBooking","id",bookingId));
     }
 
     public boolean checkDoctor(Doctor doctor, Date startDate) {

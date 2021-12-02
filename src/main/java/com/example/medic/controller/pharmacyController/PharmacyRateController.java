@@ -1,4 +1,4 @@
-package com.example.medic.controller.pharmacy;
+package com.example.medic.controller.pharmacyController;
 
 import com.example.medic.payload.Result;
 import com.example.medic.payload.pharmacy.PharmacyRatePayload;

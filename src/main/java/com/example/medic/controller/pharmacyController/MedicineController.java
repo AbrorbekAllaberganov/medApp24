@@ -1,14 +1,13 @@
-package com.example.medic.controller.pharmacy;
+package com.example.medic.controller.pharmacyController;
 
 import com.example.medic.payload.Result;
 import com.example.medic.payload.pharmacy.MedicinePayload;
 import com.example.medic.service.pharmacy.MedicineService;
-import lombok.Getter;
+import com.example.medic.service.pharmacy.PharmacyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
 import java.util.UUID;
 
 @RestController
@@ -16,6 +15,7 @@ import java.util.UUID;
 @RequestMapping("/api/admin/medicine")
 public class MedicineController {
     private final MedicineService medicineService;
+    private final PharmacyService pharmacyService;
 
     @PostMapping("/save")
     public ResponseEntity<Result> saveMedicine(@RequestBody MedicinePayload medicinePayload){
@@ -40,9 +40,15 @@ public class MedicineController {
         return ResponseEntity.ok(medicineService.getAllMedicine());
     }
 
-    @GetMapping("/get-by-pharmacy/{id}")
-    public ResponseEntity<Result> getMedicineByPharmacyId(@PathVariable UUID id){
-        Result result=medicineService.getMedicineByPharmacyId(id);
+    @GetMapping("/get-by-pharmacy/{pharmacyId}")
+    public ResponseEntity<Result> getMedicineByPharmacyId(@PathVariable UUID pharmacyId){
+        Result result=medicineService.getMedicineByPharmacyId(pharmacyId);
+        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
+    }
+
+    @GetMapping("/search-pharmacy/{medicineId}")
+    public ResponseEntity<Result> getPharmacyByMedicineId(@PathVariable UUID medicineId){
+        Result result= pharmacyService.getPharmacyByMedicineId(medicineId);
         return ResponseEntity.status(result.isSuccess()?200:409).body(result);
     }
 }
