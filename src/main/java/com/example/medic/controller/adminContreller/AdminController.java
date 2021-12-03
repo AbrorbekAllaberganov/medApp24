@@ -19,13 +19,13 @@ public class AdminController {
     public ResponseEntity<Result> getUsers(@RequestParam("page")int page,
                                       @RequestParam("size")int size){
         Result result=userService.getAll(page, size);
-        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
+        return ResponseEntity.status(result.isStatus()?200:409).body(result);
     }
 
     @PostMapping("/doctor-save")
     public ResponseEntity<Result> saveDoctor(@RequestBody DoctorPayload doctorPayload){
         Result result= doctorService.saveDoctor(doctorPayload);
-        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
+        return ResponseEntity.status(result.isStatus()?200:409).body(result);
     }
 
 

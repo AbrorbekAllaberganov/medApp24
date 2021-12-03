@@ -2,12 +2,16 @@ package com.example.medic.service.pharmacy;
 
 import com.example.medic.entity.doctor.WorkingTime;
 import com.example.medic.entity.pharmacy.Medicine;
+import com.example.medic.entity.pharmacy.MedicineSum;
 import com.example.medic.entity.pharmacy.Pharmacy;
 import com.example.medic.exceptions.ResourceNotFound;
 import com.example.medic.payload.doctor.WorkingTimePayload;
+import com.example.medic.payload.pharmacy.MedicinePayload;
+import com.example.medic.payload.pharmacy.MedicineSumPayload;
 import com.example.medic.payload.pharmacy.PharmacyPayload;
 import com.example.medic.payload.Result;
 import com.example.medic.repository.pharmacy.MedicineRepository;
+import com.example.medic.repository.pharmacy.MedicineSumRepository;
 import com.example.medic.repository.pharmacy.PharmacyRateRepository;
 import com.example.medic.repository.pharmacy.PharmacyRepository;
 import com.example.medic.service.MyFileService;
@@ -28,6 +32,7 @@ public class PharmacyService {
     private final PharmacyRateRepository pharmacyRateRepository;
     private final WorkingTimeService workingTimeService;
     private final MedicineRepository medicineRepository;
+    private final MedicineSumRepository medicineSumRepository;
     private final MedicineService medicineService;
     private final Logger logger = LoggerFactory.getLogger(PharmacyService.class);
     Result result = new Result();
@@ -121,25 +126,9 @@ public class PharmacyService {
         }
     }
 
-    public Result addMedicine(UUID pharmacyId,UUID medicineId){
-        try{
-            Pharmacy pharmacy=findPharmacyById(pharmacyId);
-            Medicine medicine=medicineService.findMedicine(medicineId);
-            Set<Pharmacy>pharmacySet=new HashSet<>(medicine.getPharmacy());
-            pharmacySet.add(pharmacy);
-            medicine.setPharmacy(new ArrayList<>(pharmacySet));
-
-            medicineRepository.save(medicine);
-            return result.success(medicine);
-        }catch (Exception e){
-            logger.error(e.getMessage());
-            return result.error(e);
-        }
-    }
-
     public Result getMedicine(UUID pharmacyId){
         try {
-            List<Medicine>medicineList= medicineRepository.getMedicineByPharmacyId(pharmacyId);
+            List<MedicineSum>medicineList= medicineSumRepository.findAllByPharmacy_Id(pharmacyId);
             return result.success(medicineList);
         }catch (Exception e){
             logger.error(e.getMessage());

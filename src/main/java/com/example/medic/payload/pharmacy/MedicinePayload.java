@@ -16,6 +16,6 @@ import java.util.UUID;
 public class MedicinePayload {
     String name;
 
-    List<UUID>pharmacyId;
+//    List<UUID>pharmacyId;
 
 }

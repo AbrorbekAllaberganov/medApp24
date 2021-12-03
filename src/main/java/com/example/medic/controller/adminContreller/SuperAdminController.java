@@ -16,11 +16,7 @@ public class SuperAdminController {
     @PostMapping("/save-admin")
     public ResponseEntity<Result> saveAdmin(@RequestBody AdminRequest adminRequest){
         Result result=superAdminService.saveAdmin(adminRequest);
-        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
+        return ResponseEntity.status(result.isStatus()?200:409).body(result);
     }
 
-//    @PutMapping("/edit-admin/{id}")
-//    public ResponseEntity<Result> editAdmin(@PathVariable UUID id,@RequestBody AdminRequest adminRequest){
-//        Result result= superAdminService.saveAdmin(adminRequest);
-//    }
 }

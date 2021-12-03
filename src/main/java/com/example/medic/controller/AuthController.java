@@ -56,13 +56,13 @@ public class AuthController {
     @PostMapping("/user-register")
     public ResponseEntity<Result> userRegister(@RequestBody UserPayload userPayload) {
         Result result = userService.saveUser(userPayload);
-        return ResponseEntity.status(result.isSuccess() ? 200 : 409).body(result);
+        return ResponseEntity.status(result.isStatus() ? 200 : 409).body(result);
     }
 
     @PostMapping("/doctor-register")
     public ResponseEntity<Result> doctorRegister(@RequestBody DoctorPayload doctorPayload) {
         Result result = doctorService.saveDoctor(doctorPayload);
-        return ResponseEntity.status(result.isSuccess() ? 200 : 409).body(result);
+        return ResponseEntity.status(result.isStatus() ? 200 : 409).body(result);
     }
 
 

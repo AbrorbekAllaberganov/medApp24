@@ -6,19 +6,21 @@ import com.example.medic.exceptions.ResourceNotFound;
 import com.example.medic.payload.Result;
 import com.example.medic.payload.pharmacy.MedicinePayload;
 import com.example.medic.repository.pharmacy.MedicineRepository;
+import com.example.medic.repository.pharmacy.MedicineSumRepository;
 import com.example.medic.repository.pharmacy.PharmacyRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class MedicineService {
     private final MedicineRepository medicineRepository;
-    private final PharmacyRepository pharmacyRepository;
+    private final MedicineSumRepository medicineSumRepository;
     private final Logger logger = LoggerFactory.getLogger(MedicineService.class);
     Result result = new Result();
 
@@ -26,7 +28,7 @@ public class MedicineService {
         try {
             Medicine medicine = new Medicine();
             medicine.setName(medicinePayload.getName());
-            medicine.setPharmacy(pharmacyRepository.findAllById(medicinePayload.getPharmacyId()));
+//            medicine.setPharmacy(pharmacyRepository.findAllById(medicinePayload.getPharmacyId()));
 
             medicineRepository.save(medicine);
 
@@ -71,7 +73,9 @@ public class MedicineService {
 
     public Result getMedicineByPharmacyId(UUID pharmacyId){
         try {
-            return result.success(medicineRepository.getMedicineByPharmacyId(pharmacyId));
+            List<UUID> medicineId= medicineSumRepository.getAllMedicineIdByPharmacy(pharmacyId);
+            List<Medicine>medicineList=medicineRepository.findAllById(medicineId);
+            return result.success(medicineList);
         }catch (Exception e){
             logger.error(e.getMessage());
             return result.error(e);

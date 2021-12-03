@@ -29,7 +29,7 @@ public class MyFileController {
     @PostMapping("/save")
     public ResponseEntity<Result> saveFile(@RequestParam(name = "file") MultipartFile multipartFile) {
         Result result= myFileService.save(multipartFile);
-        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
+        return ResponseEntity.status(result.isStatus()?200:409).body(result);
     }
 
     @GetMapping("/preview/{hashId}")
@@ -53,7 +53,7 @@ public class MyFileController {
     @DeleteMapping("/delete/{hashId}")
     public ResponseEntity<Result> delete(@PathVariable String hashId){
         Result result= myFileService.delete(hashId);
-        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
+        return ResponseEntity.status(result.isStatus()?200:409).body(result);
     }
 
 

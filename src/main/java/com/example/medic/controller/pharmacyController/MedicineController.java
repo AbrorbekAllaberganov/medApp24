@@ -20,19 +20,19 @@ public class MedicineController {
     @PostMapping("/save")
     public ResponseEntity<Result> saveMedicine(@RequestBody MedicinePayload medicinePayload){
         Result result= medicineService.saveMedicine(medicinePayload);
-        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
+        return ResponseEntity.status(result.isStatus()?200:409).body(result);
     }
 
     @PutMapping("/edit/{id}")
     public ResponseEntity<Result> editMedicine(@PathVariable UUID id,@RequestBody MedicinePayload medicinePayload){
         Result result= medicineService.editMedicine(id,medicinePayload);
-        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
+        return ResponseEntity.status(result.isStatus()?200:409).body(result);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Result> deleteMedicine(@PathVariable UUID id){
         Result result= medicineService.deleteMedicine(id);
-        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
+        return ResponseEntity.status(result.isStatus()?200:409).body(result);
     }
 
     @GetMapping("/get-all")
@@ -43,12 +43,12 @@ public class MedicineController {
     @GetMapping("/get-by-pharmacy/{pharmacyId}")
     public ResponseEntity<Result> getMedicineByPharmacyId(@PathVariable UUID pharmacyId){
         Result result=medicineService.getMedicineByPharmacyId(pharmacyId);
-        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
+        return ResponseEntity.status(result.isStatus()?200:409).body(result);
     }
 
     @GetMapping("/search-pharmacy/{medicineId}")
     public ResponseEntity<Result> getPharmacyByMedicineId(@PathVariable UUID medicineId){
         Result result= pharmacyService.getPharmacyByMedicineId(medicineId);
-        return ResponseEntity.status(result.isSuccess()?200:409).body(result);
+        return ResponseEntity.status(result.isStatus()?200:409).body(result);
     }
 }

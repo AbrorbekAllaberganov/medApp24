@@ -1,4 +1,4 @@
-package com.example.medic.payload;
+package com.example.medic.payload.pharmacy;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -6,14 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserPayload {
-    String fullName;
-    // first name last name
-    String userName;
-    String password;
-    String phoneNumber;
+public class MedicineSumPayload {
+    UUID medicineId;
+    Double sum;
+    UUID pharmacyId;
 }

@@ -54,7 +54,11 @@ public class DataLoader implements CommandLineRunner {
                 roleSuperAdmin.setId(4L);
                 roleSuperAdmin.setName("ROLE_SUPERADMIN");
 
-                List<Role> roleList=new ArrayList<>(Arrays.asList(roleUser,roleAdmin,roleDoctor,roleSuperAdmin));
+                Role rolePharmacy=new Role();
+                rolePharmacy.setId(5L);
+                rolePharmacy.setName("ROLE_PHARMACY");
+
+                List<Role> roleList=new ArrayList<>(Arrays.asList(roleUser,roleAdmin,roleDoctor,roleSuperAdmin,rolePharmacy));
                 roleRepository.saveAll(roleList);
 
                 Admin admin=new Admin();

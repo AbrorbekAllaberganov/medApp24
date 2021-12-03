@@ -10,23 +10,25 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 import java.util.UUID;
 
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Medicine implements Serializable {
+public class MedicineSum implements Serializable {
     @Id
     @Type(type = "org.hibernate.type.PostgresUUIDType")
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     protected UUID id;
 
-    String name;
+    @OneToOne
+    Medicine medicine;
 
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    List<Pharmacy> pharmacy;
+    Double sum;
+
+    @ManyToOne
+    Pharmacy pharmacy;
 }

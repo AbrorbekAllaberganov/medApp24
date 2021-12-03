@@ -17,12 +17,12 @@ public class DoctorBookingController {
     @GetMapping("/get-all")
     public ResponseEntity<Result> getAllBooking() {
         Result result = doctorBookingService.getAll();
-        return ResponseEntity.status(result.isSuccess() ? 200 : 409).body(result);
+        return ResponseEntity.status(result.isStatus() ? 200 : 409).body(result);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Result> deleteBooking(@PathVariable UUID id) {
         Result result = doctorBookingService.delete(id);
-        return ResponseEntity.status(result.isSuccess() ? 200 : 409).body(result);
+        return ResponseEntity.status(result.isStatus() ? 200 : 409).body(result);
     }
 }
