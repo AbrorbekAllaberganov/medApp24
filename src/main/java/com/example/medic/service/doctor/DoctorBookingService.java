@@ -94,7 +94,7 @@ public class DoctorBookingService {
                 LocalTime start = workingTime.getStartTime();
                 LocalTime end = workingTime.getEndTime();
 
-                if (start.compareTo(startTime) != 1 && end.compareTo(endTime) != -1)
+                if (start.compareTo(startTime) != -1 && end.compareTo(endTime) != 1)
                     return true;
             }
         }
