@@ -45,9 +45,9 @@ public class MedicineSumController {
 
     @PutMapping("/edit-info/{pharmacyId}")
     public ResponseEntity<Result> editPharmacy(@PathVariable UUID pharmacyId,
-                                               @RequestBody PharmacyPayload pharmacyPayload){
-        Result result =pharmacyService.editPharmacy(pharmacyId,pharmacyPayload);
-        return ResponseEntity.status(result.isStatus()?200:409).body(result);
+                                               @RequestBody PharmacyPayload pharmacyPayload) {
+        Result result = pharmacyService.editPharmacy(pharmacyId, pharmacyPayload);
+        return ResponseEntity.status(result.isStatus() ? 200 : 409).body(result);
     }
 
 }
