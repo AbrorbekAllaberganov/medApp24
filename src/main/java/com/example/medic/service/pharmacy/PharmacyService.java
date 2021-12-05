@@ -52,8 +52,6 @@ public class PharmacyService {
             List<WorkingTime> workingTimeList = workingTimePayloads.stream()
                     .map(workingTimeService::save).collect(Collectors.toList());
 
-//            pharmacy.setMedicines(medicineRepository.findAllById(pharmacyPayload.getMedicineIds()));
-
             pharmacy.setPharmacyWorkings(workingTimeList);
 
             pharmacyRepository.save(pharmacy);
